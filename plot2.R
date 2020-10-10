@@ -1,0 +1,13 @@
+rawDataset <- read.table("household_power_consumption.txt", header = T, sep = ";", dec = ".",encoding = "UTF-8", stringsAsFactors = T, na.strings = "?")
+na.omit(rawDataset)
+dataSet1 <- subset(rawDataset, Date == "1/2/2007")
+dataSet2 <- subset(rawDataset, Date == "2/2/2007")
+dataset <- rbind(dataSet1, dataSet2)
+dataset$Date <- as.Date(dataset$Date, format("%d/%m/%y"))
+dataset$Time <- strptime(dataset$Time, format = ("%H:%M:%S"))
+dataset[1:1440,"Time"] <- format(dataset[1:1440,"Time"],"2007-02-01 %H:%M:%S")
+dataset[1441:2880,"Time"] <- format(dataset[1441:2880,"Time"],"2007-02-02 %H:%M:%S")
+png(filename = "plot2.png", width = 480, height = 480)
+with(dataset, plot(Time, Global_active_power, type="l",xlab="",ylab="Global Active Power (kilowatts)"))
+dev.off()
+
